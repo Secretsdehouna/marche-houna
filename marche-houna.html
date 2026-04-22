@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Marché Houna">
+<meta name="theme-color" content="#1a1410">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%231a1410'/%3E%3Ctext x='90' y='125' font-family='Georgia' font-size='110' font-weight='300' fill='%23c9a961' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%231a1410'/%3E%3Ctext x='90' y='125' font-family='Georgia' font-size='110' font-weight='300' fill='%23c9a961' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+<title>Marché — Les Secrets de Houna</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#faf6f0;
+  --bg-card:#fff;
+  --ink:#1a1410;
+  --ink-soft:#6b5d4f;
+  --ink-mute:#a69889;
+  --gold:#c9a961;
+  --gold-deep:#a88843;
+  --gold-light:#e8d9b8;
+  --line:#e8dfd1;
+  --danger:#b84a39;
+  --success:#5a8a3a;
+  --cat-veg:#8ba368;
+  --cat-ess:#b88a47;
+  --cat-ser:#a64f3e;
+  --cat-exc:#6b7d99;
+  --cat-fou:#c77850;
+}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  font-family:'Nunito Sans',-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:15px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--bg);position:relative}
+
+/* HEADER */
+.header{
+  padding:14px 18px 10px;
+  background:var(--ink);
+  color:var(--bg);
+  border-bottom:2px solid var(--gold);
+  flex-shrink:0;
+}
+.header h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:22px;letter-spacing:.5px;color:var(--gold)}
+.header .sub{font-size:11px;color:var(--gold-light);opacity:.7;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;background:var(--bg-card);border-bottom:1px solid var(--line);flex-shrink:0}
+.tab{flex:1;padding:10px 4px;text-align:center;font-size:10px;font-weight:700;color:var(--ink-mute);letter-spacing:.8px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.tab.active{color:var(--gold-deep);border-bottom-color:var(--gold)}
+.tab-icon{font-size:18px;display:block;margin-bottom:2px}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:80px}
+.page{display:none;padding:12px}
+.page.active{display:block}
+
+/* FILTERS */
+.filters{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:6px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:20px;font-size:12px;font-weight:600;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+.chip.active{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  position:relative;
+  transition:transform .1s;
+  min-height:180px;
+  display:flex;
+  flex-direction:column;
+}
+.tile:active{transform:scale(.97)}
+.tile.out{opacity:.5}
+.tile-visual{
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:44px;
+  position:relative;
+  overflow:hidden;
+}
+.tile-visual.veg{background:linear-gradient(135deg,#e8efd9,#c9d9a8)}
+.tile-visual.ess{background:linear-gradient(135deg,#f5e8d0,#e3c896)}
+.tile-visual.ser{background:linear-gradient(135deg,#f0d6cf,#d9a096)}
+.tile-visual.exc{background:linear-gradient(135deg,#dde4ed,#b8c4d4)}
+.tile-visual.fou{background:linear-gradient(135deg,#f5dcc8,#e3b48e)}
+.tile-visual img{width:100%;height:100%;object-fit:cover}
+.tile-body{padding:8px 10px 10px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.tile-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--ink);line-height:1.15;margin-bottom:2px}
+.tile-sub{font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.tile-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.tile-price{font-size:14px;font-weight:700;color:var(--gold-deep)}
+.tile-stock{font-size:10px;color:var(--ink-mute);font-weight:600}
+.tile-stock.low{color:var(--danger)}
+.badge-cart{position:absolute;top:6px;right:6px;background:var(--ink);color:var(--gold);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.overlay-out{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(250,246,240,.7);font-size:10px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:1px}
+
+/* CART BAR */
+.cart-bar{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:480px;
+  background:var(--ink);
+  color:var(--gold);
+  padding:14px 18px;
+  padding-bottom:calc(14px + env(safe-area-inset-bottom));
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  z-index:50;
+  box-shadow:0 -4px 20px rgba(0,0,0,.15);
+}
+.cart-bar.hidden{display:none}
+.cart-bar-info{display:flex;flex-direction:column}
+.cart-bar-count{font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.7}
+.cart-bar-total{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600}
+.cart-bar-cta{background:var(--gold);color:var(--ink);padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+
+/* MODALS */
+.modal-back{position:fixed;inset:0;background:rgba(26,20,16,.6);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.modal-back.open{display:flex}
+.modal{background:var(--bg);width:100%;max-width:480px;max-height:90vh;border-radius:20px 20px 0 0;overflow-y:auto;animation:slideUp .25s ease-out}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--bg);z-index:5}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600}
+.modal-close{background:none;border:none;font-size:24px;color:var(--ink-soft);cursor:pointer;padding:4px 8px}
+.modal-body{padding:14px 18px 20px}
+
+/* CART ITEMS */
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.cart-item:last-child{border:none}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600}
+.cart-item-meta{font-size:11px;color:var(--ink-mute)}
+.qty-ctrl{display:flex;align-items:center;gap:8px}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--bg-card);font-size:16px;font-weight:700;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-val{min-width:20px;text-align:center;font-weight:700}
+.cart-summary{margin-top:14px;padding:14px;background:var(--bg-card);border-radius:10px;border:1px solid var(--line)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.cart-total-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft)}
+.cart-total-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--gold-deep)}
+
+/* PAYMENT */
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.pay-btn{padding:8px 4px;border:1px solid var(--line);background:var(--bg-card);border-radius:8px;font-size:11px;font-weight:600;color:var(--ink-soft);cursor:pointer}
+.pay-btn.active{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+
+/* CLIENT SECTION */
+.client-section{margin-top:14px;padding:12px 14px;background:var(--bg-card);border:1px dashed var(--gold-light);border-radius:10px}
+.client-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.client-head-txt{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.8px}
+.client-head-chev{color:var(--gold-deep);font-weight:700}
+.client-body{margin-top:10px;display:none}
+.client-body.open{display:block}
+.client-search{position:relative;margin-bottom:8px}
+.client-suggest{position:absolute;top:100%;left:0;right:0;background:var(--bg-card);border:1px solid var(--line);border-radius:8px;margin-top:4px;max-height:180px;overflow-y:auto;z-index:10;display:none;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.client-suggest.show{display:block}
+.suggest-item{padding:8px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px}
+.suggest-item:last-child{border:none}
+.suggest-item:active{background:var(--gold-light)}
+.suggest-name{font-weight:600}
+.suggest-meta{font-size:11px;color:var(--ink-mute)}
+
+/* FORMS */
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);margin-bottom:4px}
+.field input,.field textarea,.field select{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-size:15px;
+  background:var(--bg-card);
+  font-family:inherit;
+  color:var(--ink);
+}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+.field textarea{min-height:60px;resize:vertical}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.consent{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--ink-soft);line-height:1.4;margin-top:6px;cursor:pointer}
+.consent input{margin-top:2px;flex-shrink:0}
+
+/* BUTTONS */
+.btn{padding:12px 18px;border-radius:10px;border:none;font-weight:700;font-size:14px;cursor:pointer;width:100%;letter-spacing:.3px}
+.btn-primary{background:var(--gold);color:var(--ink)}
+.btn-primary:active{background:var(--gold-deep)}
+.btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink-soft)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:8px 12px;font-size:12px}
+.btn-row{display:flex;gap:8px;margin-top:12px}
+.btn-row .btn{flex:1}
+
+/* STOCK LIST */
+.stock-item{background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.stock-icon{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stock-info{flex:1;min-width:0}
+.stock-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;line-height:1.2}
+.stock-sub{font-size:10px;color:var(--ink-mute);text-transform:uppercase;letter-spacing:.5px}
+.stock-ctrl{display:flex;align-items:center;gap:6px}
+.stock-num{min-width:32px;text-align:center;font-weight:700;font-size:15px}
+.stock-num.low{color:var(--danger)}
+
+/* JOURNAL */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--ink);color:var(--gold);padding:12px 8px;border-radius:10px;text-align:center}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;line-height:1}
+.stat-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;opacity:.7;margin-top:4px}
+.sale-item{background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px}
+.sale-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sale-time{font-size:11px;color:var(--ink-mute)}
+.sale-total{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold-deep)}
+.sale-detail{font-size:12px;color:var(--ink-soft);line-height:1.4}
+.sale-client{font-size:11px;color:var(--gold-deep);font-weight:600;margin-top:4px}
+
+/* CLIENTS */
+.client-item{background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer}
+.client-item-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.client-item-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600}
+.client-item-nb{font-size:10px;background:var(--gold-light);color:var(--gold-deep);padding:2px 6px;border-radius:10px;font-weight:700;letter-spacing:.5px}
+.client-item-contact{font-size:12px;color:var(--ink-soft)}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--ink-mute)}
+.empty-icon{font-size:40px;margin-bottom:10px;opacity:.3}
+.empty-txt{font-size:13px}
+
+/* EMOJI PICKER */
+.emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px}
+.emoji-opt{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--bg-card);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.emoji-opt.sel{border-color:var(--gold);background:var(--gold-light)}
+
+/* TOAST */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--gold);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.toast.show{opacity:1}
+
+/* CATALOG */
+.cat-item{background:var(--bg-card);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.cat-emoji{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;cursor:pointer}
+.cat-info{flex:1;min-width:0}
+.cat-name{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;line-height:1.2}
+.cat-sub{font-size:10px;color:var(--ink-mute);text-transform:uppercase}
+.cat-price{font-size:13px;font-weight:700;color:var(--gold-deep)}
+
+/* SECTION HEADERS */
+.sec-h{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--ink);margin:10px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+
+/* EXPORT */
+.tools{display:flex;flex-direction:column;gap:8px;margin-top:20px;padding:14px;background:var(--bg-card);border-radius:10px;border:1px solid var(--line)}
+.tools-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft);font-weight:700;margin-bottom:4px}
+
+/* NO SALE YET */
+.hint{background:var(--gold-light);border-left:3px solid var(--gold);padding:10px 12px;border-radius:6px;font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="header">
+  <h1>Les Secrets de Houna</h1>
+  <div class="sub">Marché · Journée de vente</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="sell"><span class="tab-icon">◆</span>Caisse</div>
+  <div class="tab" data-tab="stock"><span class="tab-icon">▦</span>Stock</div>
+  <div class="tab" data-tab="journal"><span class="tab-icon">◐</span>Journal</div>
+  <div class="tab" data-tab="clients"><span class="tab-icon">♡</span>Clientes</div>
+  <div class="tab" data-tab="catalog"><span class="tab-icon">⚙</span>Catalogue</div>
+</div>
+
+<div class="content">
+
+  <!-- SELL -->
+  <div class="page active" id="page-sell">
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <!-- STOCK -->
+  <div class="page" id="page-stock">
+    <div class="hint">Touchez <strong>−</strong> ou <strong>+</strong> pour ajuster. Une vente décrémente automatiquement le stock.</div>
+    <div id="stock-list"></div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div class="page" id="page-journal">
+    <div class="stats" id="stats"></div>
+    <div class="sec-h">Ventes du jour</div>
+    <div id="sales-list"></div>
+    <div class="tools">
+      <div class="tools-title">Outils</div>
+      <button class="btn btn-ghost btn-sm" onclick="exportData('json')">📥 Exporter données (JSON)</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportData('csv')">📊 Exporter clientes (CSV)</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetDay()">🔄 Nouvelle journée (archiver ventes)</button>
+      <button class="btn btn-ghost btn-sm" onclick="resetAll()" style="color:var(--danger)">⚠ Réinitialisation complète</button>
+    </div>
+  </div>
+
+  <!-- CLIENTS -->
+  <div class="page" id="page-clients">
+    <div class="hint">Votre CRM terrain. Chaque cliente enregistrée = 1 relation que vous pouvez nourrir.</div>
+    <div id="clients-list"></div>
+  </div>
+
+  <!-- CATALOG -->
+  <div class="page" id="page-catalog">
+    <div class="hint">Touchez l'emoji pour le changer. Touchez le produit pour éditer prix/nom/stock.</div>
+    <button class="btn btn-ghost btn-sm" onclick="openProductEdit(null)" style="margin-bottom:10px">+ Ajouter un produit</button>
+    <div id="cat-list"></div>
+  </div>
+
+</div>
+
+<!-- CART BAR -->
+<div class="cart-bar hidden" id="cart-bar" onclick="openCart()">
+  <div class="cart-bar-info">
+    <div class="cart-bar-count" id="cart-count">0 article</div>
+    <div class="cart-bar-total" id="cart-total">0.00 CHF</div>
+  </div>
+  <div class="cart-bar-cta">Encaisser →</div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal-back" id="modal-cart">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Panier</div>
+      <button class="modal-close" onclick="closeModal('modal-cart')">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="cart-items"></div>
+
+      <div class="cart-summary">
+        <div class="cart-total-row">
+          <span class="cart-total-label">Total à encaisser</span>
+          <span class="cart-total-val" id="cart-sum">0.00 CHF</span>
+        </div>
+        <div class="pay-methods" id="pay-methods">
+          <div class="pay-btn" data-pay="espèces">Espèces</div>
+          <div class="pay-btn" data-pay="TWINT">TWINT</div>
+          <div class="pay-btn" data-pay="CB">Carte</div>
+        </div>
+      </div>
+
+      <div class="client-section">
+        <div class="client-head" onclick="toggleClientSection()">
+          <span class="client-head-txt">♡ Ajouter la cliente (optionnel)</span>
+          <span class="client-head-chev" id="client-chev">+</span>
+        </div>
+        <div class="client-body" id="client-body">
+          <div class="field client-search">
+            <label>Rechercher ou nouveau</label>
+            <input type="text" id="cli-name" placeholder="Prénom et nom" autocomplete="off" oninput="searchClients(this.value)">
+            <div class="client-suggest" id="cli-suggest"></div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="cli-email" placeholder="email@ex.ch" autocomplete="off">
+            </div>
+            <div class="field">
+              <label>Téléphone</label>
+              <input type="tel" id="cli-phone" placeholder="+41 ..." autocomplete="off">
+            </div>
+          </div>
+          <label class="consent">
+            <input type="checkbox" id="cli-consent">
+            <span>La cliente accepte de recevoir mes communications (newsletter, invitations marchés). RGPD.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="closeModal('modal-cart')">Continuer</button>
+        <button class="btn btn-primary" onclick="validateSale()">Valider vente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT DETAIL MODAL -->
+<div class="modal-back" id="modal-client">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="client-title">Cliente</div>
+      <button class="modal-close" onclick="closeModal('modal-client')">×</button>
+    </div>
+    <div class="modal-body" id="client-detail"></div>
+  </div>
+</div>
+
+<!-- PRODUCT EDIT MODAL -->
+<div class="modal-back" id="modal-product">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="product-title">Produit</div>
+      <button class="modal-close" onclick="closeModal('modal-product')">×</button>
+    </div>
+    <div class="modal-body" id="product-detail"></div>
+  </div>
+</div>
+
+<!-- EMOJI PICKER MODAL -->
+<div class="modal-back" id="modal-emoji">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Choisir un visuel</div>
+      <button class="modal-close" onclick="closeModal('modal-emoji')">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--ink-soft);margin-bottom:8px">Touchez un emoji pour l'attribuer au produit</div>
+      <div class="emoji-grid" id="emoji-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+// ============== CATALOGUE INITIAL ==============
+const DEFAULT_PRODUCTS = [
+  // HUILES VÉGÉTALES
+  {id:'miracle30', name:'MIRACLE', sub:'Pépins figue de Barbarie · 30ml', price:50, stock:0, cat:'veg', emoji:'🌵'},
+  {id:'miracle15', name:'MIRACLE', sub:'Pépins figue de Barbarie · 15ml', price:30, stock:0, cat:'veg', emoji:'🌵'},
+  {id:'miracle10', name:'MIRACLE', sub:'Pépins figue de Barbarie · 10ml', price:20, stock:0, cat:'veg', emoji:'🌵'},
+  {id:'eclat30', name:'ÉCLAT', sub:'Pépins de grenade · 30ml', price:30, stock:0, cat:'veg', emoji:'🍇'},
+  {id:'eclat15', name:'ÉCLAT', sub:'Pépins de grenade · 15ml', price:20, stock:0, cat:'veg', emoji:'🍇'},
+  {id:'tresor30', name:'TRÉSOR ANCESTRAL', sub:'Noyaux de dattes · 30ml', price:30, stock:0, cat:'veg', emoji:'🌴'},
+  {id:'tresor15', name:'TRÉSOR ANCESTRAL', sub:'Noyaux de dattes · 15ml', price:20, stock:0, cat:'veg', emoji:'🌴'},
+  {id:'pharaon30', name:'ÉLIXIR DES PHARAONS', sub:'Nigelle · 30ml', price:15, stock:0, cat:'veg', emoji:'🌿'},
+  {id:'pharaon15', name:'ÉLIXIR DES PHARAONS', sub:'Nigelle · 15ml', price:10, stock:0, cat:'veg', emoji:'🌿'},
+  {id:'jojoba50', name:'JOJOBA VELOURS', sub:'Huile de jojoba · 50ml', price:30, stock:0, cat:'veg', emoji:'✨'},
+  {id:'ricin30', name:'ÉLIXIR DE CROISSANCE', sub:'Ricin noire · 30ml', price:20, stock:0, cat:'veg', emoji:'💆'},
+  {id:'ricin15', name:'ÉLIXIR DE CROISSANCE', sub:'Ricin noire · 15ml', price:15, stock:0, cat:'veg', emoji:'💆'},
+
+  // HUILES ESSENTIELLES
+  {id:'vital30', name:'VITAL+', sub:'Romarin cinéole · 30ml', price:20, stock:0, cat:'ess', emoji:'🌱'},
+  {id:'vital15', name:'VITAL+', sub:'Romarin cinéole · 15ml', price:15, stock:0, cat:'ess', emoji:'🌱'},
+  {id:'vital10', name:'VITAL+', sub:'Romarin cinéole · 10ml', price:10, stock:0, cat:'ess', emoji:'🌱'},
+  {id:'oranger5', name:"ÉLIXIR D'ORANGER", sub:'Néroli · 5ml', price:50, stock:0, cat:'ess', emoji:'🌸'},
+  {id:'rose3', name:'ÉCLAT DIVIN', sub:'Rose de Damas · 3ml', price:50, stock:0, cat:'ess', emoji:'🌹'},
+
+  // SÉRUMS
+  {id:'absolu30', name:'ÉCLAT ABSOLU', sub:'Sérum jour · 30ml', price:60, stock:0, cat:'ser', emoji:'☀'},
+  {id:'absolu15', name:'ÉCLAT ABSOLU', sub:'Sérum jour · 15ml', price:35, stock:0, cat:'ser', emoji:'☀'},
+  {id:'eternite30', name:'ÉTERNITÉ', sub:'Sérum nuit · 30ml', price:60, stock:0, cat:'ser', emoji:'🌙'},
+  {id:'eternite15', name:'ÉTERNITÉ', sub:'Sérum nuit · 15ml', price:35, stock:0, cat:'ser', emoji:'🌙'},
+  {id:'regen50', name:'RÉGÉNÉRATION CAPILLAIRE', sub:'Sérum cheveux · 50ml', price:50, stock:0, cat:'ser', emoji:'💫'},
+  {id:'regen15', name:'RÉGÉNÉRATION CAPILLAIRE', sub:'Sérum cheveux · 15ml', price:20, stock:0, cat:'ser', emoji:'💫'},
+
+  // EXCLUSIVITÉS MARCHÉ
+  {id:'deo', name:'DÉODORANT NATUREL', sub:'Néroli · exclu marché', price:15, stock:0, cat:'exc', emoji:'🌼'},
+  {id:'dent', name:'DENTIFRICE MISWAK', sub:'Bâton traditionnel · exclu marché', price:15, stock:0, cat:'exc', emoji:'🪥'},
+
+  // FOUTAS
+  {id:'fmahdia', name:'FOUTA MAHDIA', sub:'Tissalya · fouta artisanale', price:25, stock:0, cat:'fou', emoji:'🧺'},
+  {id:'fhamm', name:'FOUTA HAMMAMET', sub:'Tissalya · fouta artisanale', price:20, stock:0, cat:'fou', emoji:'🧺'},
+];
+
+const CATEGORIES = [
+  {id:'all', label:'Tout'},
+  {id:'veg', label:'◆ Huiles végétales'},
+  {id:'ess', label:'✦ Huiles essentielles'},
+  {id:'ser', label:'❖ Sérums'},
+  {id:'exc', label:'⬡ Exclu marché'},
+  {id:'fou', label:'▲ Foutas'},
+];
+
+const EMOJI_POOL = ['🌵','🍇','🌴','🌿','✨','💆','🌱','🌸','🌹','☀','🌙','💫','🌼','🪥','🧺','💎','🌺','🌻','🍃','🌾','🪴','🫒','🥥','🫧','🔮','💄','🧴','🧼','🪔','🕯','🌟','⭐','♡','◆','✦','❖'];
+
+// ============== STORAGE ==============
+const K_PRODUCTS = 'houna_v3_products';
+const K_SALES = 'houna_v3_sales';
+const K_CLIENTS = 'houna_v3_clients';
+
+let products = [];
+let sales = [];
+let clients = [];
+let cart = [];
+let currentCat = 'all';
+let currentPay = null;
+let selectedClientId = null;
+let editingProductId = null;
+
+function save(key, data){ try{ localStorage.setItem(key, JSON.stringify(data)); }catch(e){ toast('Erreur sauvegarde'); } }
+function load(key, def){ try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; }catch(e){ return def; } }
+
+function init(){
+  products = load(K_PRODUCTS, null);
+  if(!products || products.length === 0){
+    products = [...DEFAULT_PRODUCTS];
+    save(K_PRODUCTS, products);
+  }
+  sales = load(K_SALES, []);
+  clients = load(K_CLIENTS, []);
+  renderFilters();
+  renderGrid();
+  renderStock();
+  renderJournal();
+  renderClients();
+  renderCatalog();
+}
+
+// ============== TABS ==============
+document.querySelectorAll('.tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('page-' + t.dataset.tab).classList.add('active');
+    if(t.dataset.tab === 'journal') renderJournal();
+    if(t.dataset.tab === 'clients') renderClients();
+  };
+});
+
+// ============== SELL ==============
+function renderFilters(){
+  const el = document.getElementById('filters');
+  el.innerHTML = CATEGORIES.map(c =>
+    `<div class="chip ${c.id === currentCat ? 'active' : ''}" onclick="setCat('${c.id}')">${c.label}</div>`
+  ).join('');
+}
+
+function setCat(id){ currentCat = id; renderFilters(); renderGrid(); }
+
+function renderGrid(){
+  const el = document.getElementById('grid');
+  const list = currentCat === 'all' ? products : products.filter(p => p.cat === currentCat);
+  if(list.length === 0){
+    el.innerHTML = '<div class="empty"><div class="empty-icon">◇</div><div class="empty-txt">Aucun produit</div></div>';
+    return;
+  }
+  el.innerHTML = list.map(p => {
+    const inCart = cart.find(c => c.id === p.id);
+    const qty = inCart ? inCart.qty : 0;
+    const out = p.stock <= 0;
+    return `<div class="tile ${out ? 'out' : ''}" onclick="${out ? '' : 'addToCart(\''+p.id+'\')'}">
+      <div class="tile-visual ${p.cat}">${p.emoji || '◆'}</div>
+      <div class="tile-body">
+        <div>
+          <div class="tile-name">${p.name}</div>
+          <div class="tile-sub">${p.sub || ''}</div>
+        </div>
+        <div class="tile-foot">
+          <span class="tile-price">${p.price} CHF</span>
+          <span class="tile-stock ${p.stock <= 3 ? 'low' : ''}">Stock ${p.stock}</span>
+        </div>
+      </div>
+      ${qty > 0 ? `<div class="badge-cart">${qty}</div>` : ''}
+      ${out ? '<div class="overlay-out">Rupture</div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function addToCart(id){
+  const p = products.find(x => x.id === id);
+  if(!p || p.stock <= 0) return;
+  const existing = cart.find(c => c.id === id);
+  const currentQty = existing ? existing.qty : 0;
+  if(currentQty >= p.stock){ toast('Stock insuffisant'); return; }
+  if(existing) existing.qty++;
+  else cart.push({id: p.id, name: p.name, sub: p.sub, price: p.price, qty: 1});
+  updateCartBar();
+  renderGrid();
+}
+
+function updateCartBar(){
+  const bar = document.getElementById('cart-bar');
+  if(cart.length === 0){ bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  const count = cart.reduce((s,i) => s + i.qty, 0);
+  const total = cart.reduce((s,i) => s + i.qty * i.price, 0);
+  document.getElementById('cart-count').textContent = count + ' article' + (count > 1 ? 's' : '');
+  document.getElementById('cart-total').textContent = total.toFixed(2) + ' CHF';
+}
+
+// ============== CART MODAL ==============
+function openCart(){
+  renderCartItems();
+  document.getElementById('modal-cart').classList.add('open');
+}
+
+function renderCartItems(){
+  const el = document.getElementById('cart-items');
+  el.innerHTML = cart.map(it => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${it.name}</div>
+        <div class="cart-item-meta">${it.sub} · ${it.price} CHF</div>
+      </div>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="cartDec('${it.id}')">−</button>
+        <span class="qty-val">${it.qty}</span>
+        <button class="qty-btn" onclick="cartInc('${it.id}')">+</button>
+      </div>
+    </div>
+  `).join('');
+  const sum = cart.reduce((s,i) => s + i.qty * i.price, 0);
+  document.getElementById('cart-sum').textContent = sum.toFixed(2) + ' CHF';
+}
+
+function cartInc(id){
+  const p = products.find(x => x.id === id);
+  const it = cart.find(c => c.id === id);
+  if(it.qty >= p.stock){ toast('Stock insuffisant'); return; }
+  it.qty++;
+  renderCartItems();
+  updateCartBar();
+  renderGrid();
+}
+
+function cartDec(id){
+  const it = cart.find(c => c.id === id);
+  it.qty--;
+  if(it.qty <= 0) cart = cart.filter(c => c.id !== id);
+  renderCartItems();
+  updateCartBar();
+  renderGrid();
+  if(cart.length === 0) closeModal('modal-cart');
+}
+
+// ============== PAYMENT ==============
+document.querySelectorAll('.pay-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.pay-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentPay = b.dataset.pay;
+  };
+});
+
+// ============== CLIENT IN CART ==============
+function toggleClientSection(){
+  const body = document.getElementById('client-body');
+  const chev = document.getElementById('client-chev');
+  body.classList.toggle('open');
+  chev.textContent = body.classList.contains('open') ? '−' : '+';
+}
+
+function searchClients(q){
+  const sug = document.getElementById('cli-suggest');
+  if(q.length < 2){ sug.classList.remove('show'); selectedClientId = null; return; }
+  const matches = clients.filter(c => c.name.toLowerCase().includes(q.toLowerCase())).slice(0, 6);
+  if(matches.length === 0){ sug.classList.remove('show'); return; }
+  sug.innerHTML = matches.map(c => `
+    <div class="suggest-item" onclick="selectClient('${c.id}')">
+      <div class="suggest-name">${c.name}</div>
+      <div class="suggest-meta">${c.email || c.phone || 'Pas de contact'}</div>
+    </div>
+  `).join('');
+  sug.classList.add('show');
+}
+
+function selectClient(id){
+  const c = clients.find(x => x.id === id);
+  if(!c) return;
+  selectedClientId = id;
+  document.getElementById('cli-name').value = c.name;
+  document.getElementById('cli-email').value = c.email || '';
+  document.getElementById('cli-phone').value = c.phone || '';
+  document.getElementById('cli-consent').checked = !!c.consent;
+  document.getElementById('cli-suggest').classList.remove('show');
+  toast('Cliente rappelée');
+}
+
+// ============== VALIDATE SALE ==============
+function validateSale(){
+  if(cart.length === 0){ toast('Panier vide'); return; }
+
+  // Client handling
+  let clientId = selectedClientId;
+  const cName = document.getElementById('cli-name').value.trim();
+  const cEmail = document.getElementById('cli-email').value.trim();
+  const cPhone = document.getElementById('cli-phone').value.trim();
+  const cConsent = document.getElementById('cli-consent').checked;
+
+  if(cName){
+    if(clientId){
+      const c = clients.find(x => x.id === clientId);
+      if(c){
+        c.name = cName;
+        if(cEmail) c.email = cEmail;
+        if(cPhone) c.phone = cPhone;
+        c.consent = cConsent;
+        c.updatedAt = Date.now();
+      }
+    } else {
+      const newC = {
+        id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+        name: cName,
+        email: cEmail,
+        phone: cPhone,
+        consent: cConsent,
+        notes: '',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+      clients.push(newC);
+      clientId = newC.id;
+    }
+    save(K_CLIENTS, clients);
+  }
+
+  // Sale
+  const total = cart.reduce((s,i) => s + i.qty * i.price, 0);
+  const sale = {
+    id: 's_' + Date.now(),
+    date: new Date().toISOString().slice(0,10),
+    timestamp: Date.now(),
+    total: total,
+    pay: currentPay,
+    clientId: clientId,
+    items: cart.map(c => ({id:c.id, name:c.name, sub:c.sub, price:c.price, qty:c.qty}))
+  };
+  sales.push(sale);
+
+  // Decrement stock
+  cart.forEach(c => {
+    const p = products.find(x => x.id === c.id);
+    if(p) p.stock = Math.max(0, p.stock - c.qty);
+  });
+
+  save(K_SALES, sales);
+  save(K_PRODUCTS, products);
+
+  // Reset
+  cart = [];
+  currentPay = null;
+  selectedClientId = null;
+  document.querySelectorAll('.pay-btn').forEach(x => x.classList.remove('active'));
+  document.getElementById('cli-name').value = '';
+  document.getElementById('cli-email').value = '';
+  document.getElementById('cli-phone').value = '';
+  document.getElementById('cli-consent').checked = false;
+  document.getElementById('client-body').classList.remove('open');
+  document.getElementById('client-chev').textContent = '+';
+
+  closeModal('modal-cart');
+  updateCartBar();
+  renderGrid();
+  renderStock();
+  toast(`✓ Vente ${total.toFixed(2)} CHF enregistrée`);
+}
+
+// ============== STOCK ==============
+function renderStock(){
+  const el = document.getElementById('stock-list');
+  const sorted = [...products].sort((a,b) => a.stock - b.stock);
+  el.innerHTML = sorted.map(p => `
+    <div class="stock-item">
+      <div class="stock-icon tile-visual ${p.cat}" style="font-size:22px">${p.emoji || '◆'}</div>
+      <div class="stock-info">
+        <div class="stock-name">${p.name}</div>
+        <div class="stock-sub">${p.sub || ''}</div>
+      </div>
+      <div class="stock-ctrl">
+        <button class="qty-btn" onclick="stockChange('${p.id}', -1)">−</button>
+        <span class="stock-num ${p.stock <= 3 ? 'low' : ''}">${p.stock}</span>
+        <button class="qty-btn" onclick="stockChange('${p.id}', 1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function stockChange(id, delta){
+  const p = products.find(x => x.id === id);
+  if(!p) return;
+  p.stock = Math.max(0, p.stock + delta);
+  save(K_PRODUCTS, products);
+  renderStock();
+  renderGrid();
+}
+
+// ============== JOURNAL ==============
+function renderJournal(){
+  const today = new Date().toISOString().slice(0,10);
+  const todaySales = sales.filter(s => s.date === today);
+  const ca = todaySales.reduce((s,x) => s + x.total, 0);
+  const nb = todaySales.length;
+  const avg = nb > 0 ? ca / nb : 0;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="stat-val">${ca.toFixed(0)}</div><div class="stat-lbl">CHF jour</div></div>
+    <div class="stat"><div class="stat-val">${nb}</div><div class="stat-lbl">Tickets</div></div>
+    <div class="stat"><div class="stat-val">${avg.toFixed(0)}</div><div class="stat-lbl">Panier moy</div></div>
+  `;
+
+  const el = document.getElementById('sales-list');
+  if(todaySales.length === 0){
+    el.innerHTML = '<div class="empty"><div class="empty-icon">◐</div><div class="empty-txt">Aucune vente aujourd\'hui</div></div>';
+    return;
+  }
+  el.innerHTML = [...todaySales].reverse().map(s => {
+    const time = new Date(s.timestamp).toLocaleTimeString('fr-CH', {hour:'2-digit', minute:'2-digit'});
+    const items = s.items.map(i => `${i.qty}× ${i.name}`).join(' · ');
+    const client = s.clientId ? clients.find(c => c.id === s.clientId) : null;
+    return `<div class="sale-item">
+      <div class="sale-head">
+        <span class="sale-time">${time} · ${s.pay || '—'}</span>
+        <span class="sale-total">${s.total.toFixed(2)} CHF</span>
+      </div>
+      <div class="sale-detail">${items}</div>
+      ${client ? `<div class="sale-client">♡ ${client.name}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ============== CLIENTS PAGE ==============
+function renderClients(){
+  const el = document.getElementById('clients-list');
+  if(clients.length === 0){
+    el.innerHTML = '<div class="empty"><div class="empty-icon">♡</div><div class="empty-txt">Aucune cliente enregistrée<br>Ajoutez-les depuis le panier lors d\'une vente.</div></div>';
+    return;
+  }
+  const sorted = [...clients].sort((a,b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  el.innerHTML = sorted.map(c => {
+    const nbSales = sales.filter(s => s.clientId === c.id).length;
+    const totalSpent = sales.filter(s => s.clientId === c.id).reduce((sum, s) => sum + s.total, 0);
+    return `<div class="client-item" onclick="openClient('${c.id}')">
+      <div class="client-item-head">
+        <span class="client-item-name">${c.name}</span>
+        <span class="client-item-nb">${nbSales} achat${nbSales > 1 ? 's' : ''} · ${totalSpent.toFixed(0)} CHF</span>
+      </div>
+      <div class="client-item-contact">${c.email || '—'} · ${c.phone || '—'}${c.consent ? ' · ✓ RGPD' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+function openClient(id){
+  const c = clients.find(x => x.id === id);
+  if(!c) return;
+  const hist = sales.filter(s => s.clientId === id).sort((a,b) => b.timestamp - a.timestamp);
+  document.getElementById('client-title').textContent = c.name;
+  document.getElementById('client-detail').innerHTML = `
+    <div class="field">
+      <label>Nom</label>
+      <input type="text" id="ed-name" value="${escHtml(c.name)}">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="ed-email" value="${escHtml(c.email || '')}">
+      </div>
+      <div class="field">
+        <label>Téléphone</label>
+        <input type="tel" id="ed-phone" value="${escHtml(c.phone || '')}">
+      </div>
+    </div>
+    <label class="consent">
+      <input type="checkbox" id="ed-consent" ${c.consent ? 'checked' : ''}>
+      <span>Consentement RGPD pour communications</span>
+    </label>
+    <div class="field" style="margin-top:10px">
+      <label>Notes</label>
+      <textarea id="ed-notes" placeholder="Préférences, remarques...">${escHtml(c.notes || '')}</textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Supprimer</button>
+      <button class="btn btn-primary" onclick="saveClient('${c.id}')">Enregistrer</button>
+    </div>
+    <div class="sec-h" style="margin-top:20px">Historique (${hist.length})</div>
+    ${hist.length === 0 ? '<div class="empty-txt" style="text-align:center;color:var(--ink-mute)">Aucun achat enregistré</div>' :
+      hist.map(s => {
+        const d = new Date(s.timestamp).toLocaleDateString('fr-CH', {day:'2-digit', month:'short', year:'numeric'});
+        const items = s.items.map(i => `${i.qty}× ${i.name}`).join(', ');
+        return `<div class="sale-item">
+          <div class="sale-head">
+            <span class="sale-time">${d}</span>
+            <span class="sale-total">${s.total.toFixed(2)} CHF</span>
+          </div>
+          <div class="sale-detail">${items}</div>
+        </div>`;
+      }).join('')
+    }
+  `;
+  document.getElementById('modal-client').classList.add('open');
+}
+
+function saveClient(id){
+  const c = clients.find(x => x.id === id);
+  if(!c) return;
+  c.name = document.getElementById('ed-name').value.trim();
+  c.email = document.getElementById('ed-email').value.trim();
+  c.phone = document.getElementById('ed-phone').value.trim();
+  c.consent = document.getElementById('ed-consent').checked;
+  c.notes = document.getElementById('ed-notes').value.trim();
+  c.updatedAt = Date.now();
+  save(K_CLIENTS, clients);
+  closeModal('modal-client');
+  renderClients();
+  toast('Cliente mise à jour');
+}
+
+function deleteClient(id){
+  if(!confirm('Supprimer cette cliente ? Son historique d\'achats sera conservé mais anonymisé.')) return;
+  clients = clients.filter(c => c.id !== id);
+  sales.forEach(s => { if(s.clientId === id) s.clientId = null; });
+  save(K_CLIENTS, clients);
+  save(K_SALES, sales);
+  closeModal('modal-client');
+  renderClients();
+  toast('Cliente supprimée');
+}
+
+// ============== CATALOG EDIT ==============
+function renderCatalog(){
+  const el = document.getElementById('cat-list');
+  const grouped = {};
+  CATEGORIES.slice(1).forEach(c => grouped[c.id] = []);
+  products.forEach(p => {
+    if(!grouped[p.cat]) grouped[p.cat] = [];
+    grouped[p.cat].push(p);
+  });
+  let html = '';
+  CATEGORIES.slice(1).forEach(cat => {
+    const list = grouped[cat.id];
+    if(!list || list.length === 0) return;
+    html += `<div class="sec-h">${cat.label}</div>`;
+    html += list.map(p => `
+      <div class="cat-item">
+        <div class="cat-emoji tile-visual ${p.cat}" onclick="openEmojiPicker('${p.id}')">${p.emoji || '◆'}</div>
+        <div class="cat-info" onclick="openProductEdit('${p.id}')">
+          <div class="cat-name">${p.name}</div>
+          <div class="cat-sub">${p.sub || ''}</div>
+        </div>
+        <div class="cat-price">${p.price} CHF</div>
+      </div>
+    `).join('');
+  });
+  el.innerHTML = html;
+}
+
+function openEmojiPicker(productId){
+  editingProductId = productId;
+  const p = products.find(x => x.id === productId);
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = EMOJI_POOL.map(e =>
+    `<div class="emoji-opt ${p && p.emoji === e ? 'sel' : ''}" onclick="setEmoji('${e}')">${e}</div>`
+  ).join('');
+  document.getElementById('modal-emoji').classList.add('open');
+}
+
+function setEmoji(emoji){
+  if(!editingProductId) return;
+  const p = products.find(x => x.id === editingProductId);
+  if(p){
+    p.emoji = emoji;
+    save(K_PRODUCTS, products);
+    renderCatalog();
+    renderGrid();
+    renderStock();
+    toast('Visuel mis à jour');
+  }
+  closeModal('modal-emoji');
+}
+
+function openProductEdit(id){
+  editingProductId = id;
+  const p = id ? products.find(x => x.id === id) : {name:'', sub:'', price:0, stock:0, cat:'veg', emoji:'◆'};
+  if(!p) return;
+  document.getElementById('product-title').textContent = id ? 'Éditer produit' : 'Nouveau produit';
+  document.getElementById('product-detail').innerHTML = `
+    <div class="field">
+      <label>Nom commercial</label>
+      <input type="text" id="pe-name" value="${escHtml(p.name)}">
+    </div>
+    <div class="field">
+      <label>Sous-titre (format / description)</label>
+      <input type="text" id="pe-sub" value="${escHtml(p.sub || '')}">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Prix (CHF)</label>
+        <input type="number" id="pe-price" value="${p.price}" step="1" min="0">
+      </div>
+      <div class="field">
+        <label>Stock</label>
+        <input type="number" id="pe-stock" value="${p.stock}" step="1" min="0">
+      </div>
+    </div>
+    <div class="field">
+      <label>Catégorie</label>
+      <select id="pe-cat">
+        ${CATEGORIES.slice(1).map(c => `<option value="${c.id}" ${p.cat === c.id ? 'selected' : ''}>${c.label}</option>`).join('')}
+      </select>
+    </div>
+    <div class="btn-row">
+      ${id ? `<button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')">Supprimer</button>` : ''}
+      <button class="btn btn-primary" onclick="saveProduct('${id || ''}')">Enregistrer</button>
+    </div>
+  `;
+  document.getElementById('modal-product').classList.add('open');
+}
+
+function saveProduct(id){
+  const name = document.getElementById('pe-name').value.trim();
+  const sub = document.getElementById('pe-sub').value.trim();
+  const price = parseFloat(document.getElementById('pe-price').value) || 0;
+  const stock = parseInt(document.getElementById('pe-stock').value) || 0;
+  const cat = document.getElementById('pe-cat').value;
+  if(!name){ toast('Nom requis'); return; }
+  if(id){
+    const p = products.find(x => x.id === id);
+    if(p){ p.name = name; p.sub = sub; p.price = price; p.stock = stock; p.cat = cat; }
+  } else {
+    products.push({
+      id: 'p_' + Date.now(),
+      name, sub, price, stock, cat,
+      emoji: '◆'
+    });
+  }
+  save(K_PRODUCTS, products);
+  closeModal('modal-product');
+  renderCatalog();
+  renderGrid();
+  renderStock();
+  toast('Produit enregistré');
+}
+
+function deleteProduct(id){
+  if(!confirm('Supprimer ce produit ?')) return;
+  products = products.filter(p => p.id !== id);
+  save(K_PRODUCTS, products);
+  closeModal('modal-product');
+  renderCatalog();
+  renderGrid();
+  renderStock();
+  toast('Produit supprimé');
+}
+
+// ============== EXPORTS ==============
+function exportData(type){
+  let content, filename, mime;
+  const dateStr = new Date().toISOString().slice(0,10);
+  if(type === 'json'){
+    content = JSON.stringify({products, sales, clients, exportedAt: new Date().toISOString()}, null, 2);
+    filename = `houna_marche_${dateStr}.json`;
+    mime = 'application/json';
+  } else {
+    // CSV clientes
+    const BOM = '\uFEFF';
+    const head = 'Nom,Email,Téléphone,Consentement RGPD,Nb achats,Total dépensé (CHF),Notes,Créé le\n';
+    const rows = clients.map(c => {
+      const cSales = sales.filter(s => s.clientId === c.id);
+      const total = cSales.reduce((s,x) => s + x.total, 0);
+      const d = new Date(c.createdAt).toISOString().slice(0,10);
+      return [c.name, c.email || '', c.phone || '', c.consent ? 'OUI' : 'NON', cSales.length, total.toFixed(2), (c.notes || '').replace(/"/g, '""'), d]
+        .map(v => `"${v}"`).join(',');
+    }).join('\n');
+    content = BOM + head + rows;
+    filename = `houna_clientes_${dateStr}.csv`;
+    mime = 'text/csv';
+  }
+  const blob = new Blob([content], {type: mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast('Export généré');
+}
+
+function resetDay(){
+  if(!confirm('Archiver la journée ? Les ventes resteront dans l\'historique mais le compteur du jour repart à zéro demain automatiquement.')) return;
+  toast('La journée se réinitialise automatiquement');
+}
+
+function resetAll(){
+  if(!confirm('⚠ Tout effacer ? Ventes, clientes et stock seront supprimés. Le catalogue repart à zéro.')) return;
+  if(!confirm('Vraiment sûr ? Action irréversible.')) return;
+  localStorage.removeItem(K_PRODUCTS);
+  localStorage.removeItem(K_SALES);
+  localStorage.removeItem(K_CLIENTS);
+  products = [...DEFAULT_PRODUCTS];
+  sales = [];
+  clients = [];
+  cart = [];
+  save(K_PRODUCTS, products);
+  renderFilters();
+  renderGrid();
+  renderStock();
+  renderJournal();
+  renderClients();
+  renderCatalog();
+  updateCartBar();
+  toast('Réinitialisation complète');
+}
+
+// ============== UTILITIES ==============
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function escHtml(s){ return (s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// Close modal on backdrop click
+document.querySelectorAll('.modal-back').forEach(m => {
+  m.onclick = e => { if(e.target === m) m.classList.remove('open'); };
+});
+
+// Init
+init();
+</script>
+</body>
+</html>
